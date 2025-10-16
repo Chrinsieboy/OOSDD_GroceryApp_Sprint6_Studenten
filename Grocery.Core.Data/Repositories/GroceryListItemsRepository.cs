@@ -1,11 +1,12 @@
+﻿using Microsoft.Data.Sqlite;
 ﻿using Grocery.Core.Interfaces.Repositories;
 using Grocery.Core.Models;
 
 namespace Grocery.Core.Data.Repositories
 {
-    public class GroceryListItemsRepository : IGroceryListItemsRepository
+    public class GroceryListItemsRepository : DatabaseConnection, IGroceryListItemsRepository
     {
-        private readonly List<GroceryListItem> groceryListItems;
+        private readonly List<GroceryListItem> groceryListItems = [];
 
         public GroceryListItemsRepository()
         {
