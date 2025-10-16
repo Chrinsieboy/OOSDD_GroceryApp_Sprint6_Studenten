@@ -10,17 +10,49 @@ namespace Grocery.Core.Data.Repositories
 
         public GroceryListItemsRepository()
         {
-            groceryListItems = [
-                new GroceryListItem(1, 1, 1, 3),
-                new GroceryListItem(2, 1, 2, 1),
-                new GroceryListItem(3, 1, 3, 4),
-                new GroceryListItem(4, 2, 1, 2),
-                new GroceryListItem(5, 2, 2, 5),
+            CreateTable(@"CREATE TABLE IF NOT EXISTS GroceryListItems (
+                            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            [GroceryListId] INTEGER NOT NULL,
+                            [ProductId] INTEGER NOT NULL,
+                            [Amount] INTEGER NOT NULL,
+                            Unique(GroceryListId, ProductId)
+                        )");
+
+            List<string> insertQueries = [
+                @"INSERT OR REPLACE INTO GroceryListItems(GroceryListId, ProductId, Amount) VALUES(1, 1, 3)",
+                @"INSERT OR REPLACE INTO GroceryListItems(GroceryListId, ProductId, Amount) VALUES(1, 2, 1)",
+                @"INSERT OR REPLACE INTO GroceryListItems(GroceryListId, ProductId, Amount) VALUES(1, 3, 4)",
+                @"INSERT OR REPLACE INTO GroceryListItems(GroceryListId, ProductId, Amount) VALUES(2, 1, 2)",
+                @"INSERT OR REPLACE INTO GroceryListItems(GroceryListId, ProductId, Amount) VALUES(2, 2, 5)"
             ];
+            
+            InsertMultipleWithTransaction(insertQueries);
+            GetAll();
         }
 
         public List<GroceryListItem> GetAll()
         {
+            groceryListItems.Clear();
+
+            string selectQuery = "SELECT Id, GroceryListId, ProductId, Amount FROM GroceryListItems";
+            
+            OpenConnection();
+            using (SqliteCommand command = new(selectQuery, Connection))
+            {
+                SqliteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    int groceryListId = reader.GetInt32(1);
+                    int productId = reader.GetInt32(2);
+                    int amount = reader.GetInt32(3);
+                    
+                    groceryListItems.Add(new GroceryListItem(id, groceryListId, productId, amount));
+                }
+            }
+            CloseConnection();
+            
             return groceryListItems;
         }
 
