@@ -58,7 +58,30 @@ namespace Grocery.Core.Data.Repositories
 
         public List<GroceryListItem> GetAllOnGroceryListId(int id)
         {
-            return groceryListItems.Where(g => g.GroceryListId == id).ToList();
+            List<GroceryListItem> items = new();
+            
+            string selectQuery = "SELECT Id, GroceryListId, ProductId, Amount FROM GroceryListItems WHERE GroceryListId = @GroceryListId";
+            
+            OpenConnection();
+            using (SqliteCommand command = new(selectQuery, Connection))
+            {
+                command.Parameters.AddWithValue("@GroceryListId", id);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int itemId = reader.GetInt32(0);
+                        int groceryListId = reader.GetInt32(1);
+                        int productId = reader.GetInt32(2);
+                        int amount = reader.GetInt32(3);
+                        
+                        items.Add(new GroceryListItem(itemId, groceryListId, productId, amount));
+        }
+                }
+            }
+            CloseConnection();
+
+            return items;
         }
 
         public GroceryListItem Add(GroceryListItem item)
