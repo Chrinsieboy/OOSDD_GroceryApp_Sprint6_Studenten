@@ -27,14 +27,14 @@ namespace Grocery.Core.Data.Repositories
                 @"INSERT OR IGNORE INTO Product(Name, Stock, ShelfLife, Price) VALUES('Brood', 400, '2025-09-12', 2.19)",
                 @"INSERT OR IGNORE INTO Product(Name, Stock, ShelfLife, Price) VALUES('Cornflakes', 0, '2025-12-31', 1.48)"
             ];
-
+            
             InsertMultipleWithTransaction(insertQueries);
             GetAll();
         }
         public List<Product> GetAll()
         {
             products.Clear();
-
+            
             OpenConnection();
             using (var command = Connection.CreateCommand())
             {
@@ -48,7 +48,7 @@ namespace Grocery.Core.Data.Repositories
                         int stock = reader.GetInt32(2);
                         DateOnly shelfLife = DateOnly.FromDateTime(reader.GetDateTime(3));
                         Decimal price = reader.GetDecimal(4);
-                        
+            
                         products.Add(new Product(id, name, stock, shelfLife, price));
                     }
                 }
@@ -68,30 +68,35 @@ namespace Grocery.Core.Data.Repositories
             OpenConnection();
             using (var command = Connection.CreateCommand())
             {
-                command.CommandText = "INSERT INTO Product (Name, Stock, ShelfLife, Price) VALUES (@name, @stock, @shelfLife, @price) RETURNING Id, Name, Stock, ShelfLife, Price;";
+                command.CommandText = "INSERT INTO Product (Name, Stock, ShelfLife, Price) VALUES (@name, @stock, @shelfLife, @price);";
                 command.Parameters.AddWithValue("@name", item.Name);
                 command.Parameters.AddWithValue("@stock", item.Stock);
                 command.Parameters.AddWithValue("@shelfLife", item.ShelfLife.ToString("yyyy-MM-dd"));
                 command.Parameters.AddWithValue("@price", item.Price);
 
-                using (var reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        int id = reader.GetInt32(0);
-                        string name = reader.GetString(1);
-                        int stock = reader.GetInt32(2);
-                        DateOnly shelfLife = DateOnly.FromDateTime(reader.GetDateTime(3));
-                        decimal price = reader.GetDecimal(4);
-                        var product = new Product(id, name, stock, shelfLife, price);
+                command.ExecuteNonQuery();
 
-                        products.Add(product);
-                        CloseConnection();
-                        return product;
+                using (var getCommand = Connection.CreateCommand())
+                {
+                    getCommand.CommandText = "SELECT Id, Name, Stock, ShelfLife, Price FROM Product ORDER BY Id DESC LIMIT 1";
+                    using (var reader = getCommand.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            string name = reader.GetString(1);
+                            int stock = reader.GetInt32(2);
+                            DateOnly shelfLife = DateOnly.FromDateTime(reader.GetDateTime(3));
+                            decimal price = reader.GetDecimal(4);
+                            var product = new Product(id, name, stock, shelfLife, price);
+
+                            products.Add(product);
+                            
+                            return product;
+                        }
                     }
                 }
             }
-            CloseConnection();
             return item;
         }
 
