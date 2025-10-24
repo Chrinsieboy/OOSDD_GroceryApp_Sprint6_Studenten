@@ -46,7 +46,7 @@ Where `<type>` is one of:
 - `feat` — a new feature
 - `fix` — a bug fix
 - `docs` — documentation only changes
-- `style` — formatting, missing semi colons, etc; no code change
+- `style` — formatting, missing semicolons, etc; no code change
 - `refactor` — code change that neither fixes a bug nor adds a feature
 - `test` — adding missing tests or correcting existing tests
 - `chore` — changes to the build process or auxiliary tools and libraries such as documentation
@@ -97,7 +97,7 @@ See [Conventional Commits](https://www.conventionalcommits.org/) for more detail
 - **Release Branch**  
   1. Once enough features are implemented and tested (e.g. for a sprint release), create `release/<version>` from `develop`.  
   2. Update version number(s), update documentation, run final integration tests.  
-  3. Merge release branch into both `main`.  
+  3. Merge release branch into `main`.  
   4. Create release in github and tag the release. 
   5. Make descriptive release notes.
   6. Publish the release.
