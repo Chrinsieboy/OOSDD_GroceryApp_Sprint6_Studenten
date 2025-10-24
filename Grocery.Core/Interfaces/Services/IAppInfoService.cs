@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Grocery.Core.Interfaces.Services
+﻿namespace Grocery.Core.Interfaces.Services
 {
     public interface IAppInfoService
     {
