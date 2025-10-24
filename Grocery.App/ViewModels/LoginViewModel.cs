@@ -10,6 +10,7 @@ namespace Grocery.App.ViewModels
     {
         private readonly IAuthService _authService;
         private readonly GlobalViewModel _global;
+        private readonly IAppInfoService _appInfoService;
 
         [ObservableProperty]
         private string email = "user3@mail.com";
@@ -20,8 +21,12 @@ namespace Grocery.App.ViewModels
         [ObservableProperty]
         private string loginMessage;
 
-        public LoginViewModel(IAuthService authService, GlobalViewModel global)
-        { //_authService = App.Services.GetServices<IAuthService>().FirstOrDefault();
+        public string AppVersion { get; }
+
+        public LoginViewModel(IAppInfoService appInfoService, IAuthService authService, GlobalViewModel global)
+        { 
+            _appInfoService = appInfoService;
+            AppVersion = _appInfoService.GetAppVersion();
             _authService = authService;
             _global = global;
         }
