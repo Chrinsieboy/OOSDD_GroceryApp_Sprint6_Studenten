@@ -98,7 +98,7 @@ See [Conventional Commits](https://www.conventionalcommits.org/) for more detail
   1. Once enough features are implemented and tested (e.g. for a sprint release), create `release/<version>` from `develop`.  
   2. Update version number(s), update documentation, run final integration tests.  
   3. Merge release branch into `main`.  
-  4. Create release in github and tag the release. 
+  4. Create release in GitHub and tag the release. 
   5. Make descriptive release notes.
   6. Publish the release.
 
