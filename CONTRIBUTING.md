@@ -64,7 +64,7 @@ See [Conventional Commits](https://www.conventionalcommits.org/) for more detail
 1. **Fork** the repository and clone to your local machine.  
    ```bash
    git clone <your‑fork‑url>
-   cd OOSDD_GroceryApp_Sprint2_Studenten
+   cd OOSDD_GroceryApp_Sprint6_Studenten
    git checkout develop
    ```
 
