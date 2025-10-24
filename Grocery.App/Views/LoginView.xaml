@@ -11,5 +11,9 @@
         <Entry Placeholder="Password" Text="{Binding Password}" IsPassword="True" />
         <Button Text="Login" Command="{Binding LoginCommand}" />
         <Label Text="{Binding LoginMessage}" TextColor="Red" />
+
+        <Label Text="{Binding AppVersion}" 
+        HorizontalOptions="Center" 
+        Margin="0, 20, 0, 0" />
     </StackLayout>
 </ContentPage>
